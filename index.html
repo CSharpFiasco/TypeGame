@@ -41,7 +41,7 @@
 <body>
     <main>
         <div class='bar'>
-            <span id='level'><label>Level: </label>1</span>
+            <span id='level'>Level: <label></label></span>
             <span id='notification'></span>
             <span id='pause'>Pause</span>
         </div>
@@ -55,6 +55,7 @@
         let currentLevel = 1;
         let currentTimeout = 0;
         let letterElement = document.getElementById('letter');
+        let levelLabel = document.querySelector('#level label');
         let isPaused = false;
         let threshholds = [
             {level: 0, timeout: 5000}
@@ -66,25 +67,27 @@
             ,{level: 150, timeout: 1000}
             ,{level: 200, timeout: 600}
         ]
-        const setLevel = function(level){
-            console.log(level)
+        const setLevel = level => {
+            currentLevel = level;
+            levelLabel.innerHTML = level;
             letterElement.innerHTML = randomLetter();
             let timeout = threshholds.find(x=>{return x.level >= level}).timeout;
-            clearTimeout(currentTimeout)
+            
+            clearTimeout(currentTimeout);
+
             if(level==1){return;}
+            
             currentTimeout = setTimeout(function(){
                 alert('You Lose.');
                 currentLevel = 1;
                 setLevel(currentLevel)
             }, timeout);
         };
-        window.addEventListener('keypress', function(e){
+        window.addEventListener('keypress', e => {
             e = e || event;
-            // console.log(letterElement.innerHTML);
-            // console.log(e.keyCode);
-            // console.log(String.fromCharCode(e.keyCode));
             if(letterElement.innerHTML.toLowerCase() == String.fromCharCode(e.keyCode).toLowerCase()){
-                setLevel(currentLevel++);
+                currentLevel++
+                setLevel(currentLevel);
             }
         });
         document.getElementById('pause').addEventListener('click', e => {
@@ -98,10 +101,8 @@
                 clearTimeout(currentTimeout)
             }
         });
-        (function(){
+        (()=>{
             setLevel(1);
-            //console.log(randomLetter());
-
         })();
     </script>
 </body>
