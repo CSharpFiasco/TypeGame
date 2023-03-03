@@ -1,43 +1,55 @@
 <!DOCTYPE html>
+
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
+    <title>Typing game where you type as you go</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
     <style>
-        html, body{
+        html,
+        body {
             padding: 0;
-            margin:0;
+            margin: 0;
         }
-        html, body, main{
+
+        html,
+        body,
+        main {
             width: 100%;
             height: 100%;
-            font-family: 'Roboto Mono';
+            font-family: 'Roboto Mono', sans-serif;
         }
-        main{
-            background-color:#151965;
+
+        main {
+            background-color: #151965;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .bar{
-            color:#fff;
+
+        .bar {
+            color: #fff;
         }
-        #level{
-            color:#fff;
+
+        #level {
+            color: #fff;
         }
-        #letter{ 
-            flex:1 auto;
+
+        #letter {
+            flex: 1 auto;
             align-content: center;
-            text-align:center; 
+            text-align: center;
             color: #46b5d1;
             font-size: 60vh;
             text-transform: uppercase;
         }
-        #pause{
+
+        #pause {
             cursor: pointer;
         }
     </style>
 </head>
+
 <body>
     <main>
         <div class='bar'>
@@ -49,7 +61,7 @@
     </main>
     <script>
         const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        const randomLetter = function(){
+        const randomLetter = function () {
             return characters.charAt(Math.floor(Math.random() * characters.length));
         };
         let currentLevel = 1;
@@ -58,50 +70,53 @@
         let levelLabel = document.querySelector('#level label');
         let isPaused = false;
         let threshholds = [
-            {level: 0, timeout: 5000}
-            ,{level: 25, timeout: 4000}
-            ,{level: 50, timeout: 3000}
-            ,{level: 75, timeout: 2500}
-            ,{level: 100, timeout: 2000}
-            ,{level: 125, timeout: 1500}
-            ,{level: 150, timeout: 1000}
-            ,{level: 200, timeout: 600}
-        ]
+            { level: 0, timeout: 5000 }
+            , { level: 25, timeout: 4000 }
+            , { level: 50, timeout: 3000 }
+            , { level: 75, timeout: 2500 }
+            , { level: 100, timeout: 2000 }
+            , { level: 125, timeout: 1500 }
+            , { level: 150, timeout: 1000 }
+            , { level: 200, timeout: 600 }
+        ];
+
         const setLevel = level => {
             currentLevel = level;
             levelLabel.innerHTML = level;
             letterElement.innerHTML = randomLetter();
-            let timeout = threshholds.find(x=>{return x.level >= level}).timeout;
-            
+            let timeout = threshholds.find(x => { return x.level >= level }).timeout;
+
             clearTimeout(currentTimeout);
 
-            if(level==1){return;}
-            
-            currentTimeout = setTimeout(function(){
+            if (level == 1) { return; }
+
+            currentTimeout = setTimeout(function () {
                 alert('You Lose.');
                 currentLevel = 1;
                 setLevel(currentLevel)
             }, timeout);
         };
+
         window.addEventListener('keypress', e => {
             e = e || event;
-            if(letterElement.innerHTML.toLowerCase() == String.fromCharCode(e.keyCode).toLowerCase()){
+            if (letterElement.innerHTML.toLowerCase() == String.fromCharCode(e.keyCode).toLowerCase()) {
                 currentLevel++
                 setLevel(currentLevel);
             }
         });
+
         document.getElementById('pause').addEventListener('click', e => {
-            // console.log(e.target)
             let that = e.target;
             isPaused = that.innerHTML == 'Pause'
-            that.innerHTML = isPaused ?  'Continue' : 'Pause';
-            if(!isPaused){
+            that.innerHTML = isPaused ? 'Continue' : 'Pause';
+            if (!isPaused) {
                 setLevel(currentLevel);
-            }else{
+            } else {
                 clearTimeout(currentTimeout)
             }
         });
-        (()=>{
+
+        (() => {
             setLevel(1);
         })();
     </script>
